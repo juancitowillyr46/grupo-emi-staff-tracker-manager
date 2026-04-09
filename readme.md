@@ -54,3 +54,31 @@ Notes
 - `CurrentPosition` is stored as an integer in `Employee`, as required by the test statement.
 - `PositionHistory.Position` is stored as a string to keep the historical record descriptive.
 - The code is organized using a Clean Architecture style with Domain, Application, Infrastructure, and API layers.
+
+Application Layer
+
+The Application layer contains the contracts and use cases used by the API and Infrastructure layers.
+
+Contracts:
+
+- `IEmployeeRepository`
+- `IDepartmentRepository`
+- `IProjectRepository`
+- `IUnitOfWork`
+
+Employee use cases:
+
+- `GetAllEmployeesUseCase`
+- `GetEmployeeByIdUseCase`
+- `CreateEmployeeUseCase`
+- `UpdateEmployeeUseCase`
+- `DeleteEmployeeUseCase`
+
+DTOs:
+
+- `CreateEmployeeRequest`
+- `UpdateEmployeeRequest`
+- `EmployeeResponse`
+- `PositionHistoryResponse`
+
+This layer keeps the business flow separated from HTTP and persistence concerns.
