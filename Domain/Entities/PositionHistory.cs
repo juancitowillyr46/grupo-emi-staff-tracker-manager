@@ -2,6 +2,7 @@ namespace Domain.Entities;
 
 public class PositionHistory
 {
+    public int Id { get; private set; }
     public int EmployeeId { get; }
     public string Position { get; }
     public DateTime StartDate { get; }
