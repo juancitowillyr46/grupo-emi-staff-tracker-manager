@@ -14,6 +14,7 @@ public sealed class AppDbContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<PositionHistory> PositionHistories => Set<PositionHistory>();
     public DbSet<EmployeeProject> EmployeeProjects => Set<EmployeeProject>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
