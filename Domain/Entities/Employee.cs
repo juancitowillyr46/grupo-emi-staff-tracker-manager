@@ -38,6 +38,14 @@ public class Employee
         DepartmentId = departmentId;
     }
 
+    public void UpdateDetails(string name, int currentPosition, decimal salary, int departmentId)
+    {
+        Name = name;
+        CurrentPosition = currentPosition;
+        Salary = salary;
+        DepartmentId = departmentId;
+    }
+
     public void AddProject(Project project)
     {
         _employeeProjects.Add(new EmployeeProject(Id, project.Id));
