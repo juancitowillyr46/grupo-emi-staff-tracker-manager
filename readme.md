@@ -20,3 +20,37 @@ Dependecies
 - SQL Server
 - JWT Authentication packages
 - Swashbuckle (Swagger) for API documentation
+
+Domain Entities
+
+The Domain layer includes the core employee management model:
+
+- Employee
+  - Represents an employee in the system.
+  - Stores the current position, salary, and department reference.
+  - Keeps a history of positions and project assignments.
+
+- Department
+  - Represents the department where employees belong.
+
+- Project
+  - Represents a project that employees can be assigned to.
+
+- PositionHistory
+  - Tracks the different positions an employee has held over time.
+
+- EmployeeProject
+  - Acts as the link between employees and projects.
+  - Supports the many-to-many relationship between both entities.
+
+Relationships
+
+- Department 1 --- N Employee
+- Employee 1 --- N PositionHistory
+- Employee N --- N Project through EmployeeProject
+
+Notes
+
+- `CurrentPosition` is stored as an integer in `Employee`, as required by the test statement.
+- `PositionHistory.Position` is stored as a string to keep the historical record descriptive.
+- The code is organized using a Clean Architecture style with Domain, Application, Infrastructure, and API layers.
