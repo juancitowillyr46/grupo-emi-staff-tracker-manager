@@ -41,6 +41,16 @@ public sealed class EmployeeRepository : IEmployeeRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<Employee>> GetByDepartmentWithProjectsAsync(int departmentId)
+    {
+        return await _context.Employees
+            .Where(x => x.DepartmentId == departmentId && x.EmployeeProjects.Any())
+            .Include(x => x.Department)
+            .Include(x => x.PositionHistories)
+            .Include(x => x.EmployeeProjects)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(Employee employee)
     {
         await _context.Employees.AddAsync(employee);
