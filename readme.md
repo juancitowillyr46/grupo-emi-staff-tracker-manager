@@ -82,3 +82,30 @@ DTOs:
 - `PositionHistoryResponse`
 
 This layer keeps the business flow separated from HTTP and persistence concerns.
+
+Infrastructure Layer
+
+The Infrastructure layer contains the EF Core and persistence implementation.
+
+Main pieces:
+
+- `AppDbContext`
+  - Exposes the database sets for all entities.
+  - Applies all EF Core configurations from the assembly.
+
+- Entity configurations
+  - `EmployeeConfiguration`
+  - `DepartmentConfiguration`
+  - `ProjectConfiguration`
+  - `PositionHistoryConfiguration`
+  - `EmployeeProjectConfiguration`
+
+- Repositories
+  - `EmployeeRepository`
+  - `DepartmentRepository`
+  - `ProjectRepository`
+
+- `UnitOfWork`
+  - Wraps `SaveChangesAsync()` for coordinated persistence.
+
+This layer implements the contracts defined in Application and is responsible for database access and mapping.
