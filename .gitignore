@@ -1,0 +1,19 @@
+# Build directories
+bin/
+obj/
+
+# Visual Studio
+*.user
+*.suo
+*.pdb
+*.vs/
+.vscode/
+
+# EF Core migrations (opcional)
+Migrations/
+
+# Docker (si lo usas)
+*.dockerfile
+
+# Others
+*.log
