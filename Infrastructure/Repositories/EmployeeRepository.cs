@@ -17,6 +17,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     public async Task<IEnumerable<Employee>> GetAllAsync()
     {
         return await _context.Employees
+            .Where(x => !x.IsDeleted)
             .Include(x => x.Department)
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
@@ -27,6 +28,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     public async Task<Employee?> GetByIdAsync(int id)
     {
         return await _context.Employees
+            .Where(x => !x.IsDeleted)
             .Include(x => x.Department)
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
@@ -37,7 +39,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     public async Task<IEnumerable<Employee>> GetByDepartmentAsync(int departmentId)
     {
         return await _context.Employees
-            .Where(x => x.DepartmentId == departmentId)
+            .Where(x => x.DepartmentId == departmentId && !x.IsDeleted)
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
@@ -47,7 +49,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     public async Task<IEnumerable<Employee>> GetByDepartmentWithProjectsAsync(int departmentId)
     {
         return await _context.Employees
-            .Where(x => x.DepartmentId == departmentId && x.EmployeeProjects.Any())
+            .Where(x => x.DepartmentId == departmentId && !x.IsDeleted && x.EmployeeProjects.Any())
             .Include(x => x.Department)
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)

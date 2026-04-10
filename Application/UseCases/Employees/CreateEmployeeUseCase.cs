@@ -24,7 +24,6 @@ public sealed class CreateEmployeeUseCase : ICreateEmployeeUseCase
         }
 
         var employee = new Employee(
-            request.Id,
             request.Name,
             request.CurrentPosition,
             request.Salary,

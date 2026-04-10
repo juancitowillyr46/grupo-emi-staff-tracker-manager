@@ -5,7 +5,7 @@ public class Employee
     private readonly List<PositionHistory> _positionHistories = new();
     private readonly List<EmployeeProject> _employeeProjects = new();
 
-    public int Id { get; }
+    public int Id { get; private set; }
     public string Name { get; private set; }
     public int CurrentPosition { get; private set; }
     public Position? CurrentPositionInfo { get; private set; }
@@ -17,9 +17,8 @@ public class Employee
     public IReadOnlyCollection<PositionHistory> PositionHistories => _positionHistories.AsReadOnly();
     public IReadOnlyCollection<EmployeeProject> EmployeeProjects => _employeeProjects.AsReadOnly();
 
-    public Employee(int id, string name, int currentPosition, decimal salary, int departmentId)
+    public Employee(string name, int currentPosition, decimal salary, int departmentId)
     {
-        Id = id;
         Name = name;
         CurrentPosition = currentPosition;
         Salary = salary;

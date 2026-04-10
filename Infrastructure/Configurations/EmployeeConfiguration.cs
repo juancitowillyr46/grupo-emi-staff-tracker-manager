@@ -51,7 +51,5 @@ public sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .WithOne(x => x.Employee)
             .HasForeignKey(x => x.EmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

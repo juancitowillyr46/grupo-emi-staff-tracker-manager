@@ -1,5 +1,6 @@
 using API.Middleware;
 using API.Services;
+using API.Swagger;
 using Application.Contracts;
 using Application.UseCases.Employees;
 using Infrastructure;
@@ -44,6 +45,8 @@ builder.Services.AddSwaggerGen(options =>
             Array.Empty<string>()
         }
     });
+
+    options.SchemaFilter<RequestExamplesSchemaFilter>();
 
     var xmlFile = $"{typeof(Program).Assembly.GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
