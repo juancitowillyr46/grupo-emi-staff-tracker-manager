@@ -304,8 +304,8 @@ The database includes seed data for:
 
 ## How to Run
 
-1. Update the connection string in `API/appsettings.json` if needed.
-2. Run migrations:
+1. Update the connection string in `API/appsettings.json` if needed. The local SQL Server instance used in this solution is `DESKTOP-4701OER\\SQLEXPRESS`.
+2. Apply the migrations:
 
 ```powershell
 dotnet ef database update --project .\Infrastructure\Infrastructure.csproj --startup-project .\API\API.csproj
@@ -317,10 +317,70 @@ dotnet ef database update --project .\Infrastructure\Infrastructure.csproj --sta
 dotnet run --project .\API\API.csproj
 ```
 
-4. Use Swagger or `API.http` to test the endpoints.
+4. Open Swagger and use the `Authorize` button to paste a JWT token after logging in.
+5. Use Swagger or `API.http` to test the endpoints.
+
+## Example Payloads
+
+### Register
+
+```json
+{
+  "username": "admin",
+  "password": "Admin123!",
+  "role": "Admin"
+}
+```
+
+### Login
+
+```json
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+```
+
+### Create employee
+
+```json
+{
+  "name": "John Doe",
+  "currentPosition": 2,
+  "salary": 3000,
+  "departmentId": 1
+}
+```
+
+### Assign projects
+
+```json
+{
+  "projectIds": [1, 2, 3]
+}
+```
+
+### Valid reference data
+
+- `departmentId`
+  - `1` = IT
+  - `2` = HR
+  - `3` = Finance
+
+- `currentPosition`
+  - `1` = Employee
+  - `2` = Team Lead
+  - `3` = Engineering Manager
+  - `4` = Sales Manager
+
+## Swagger
+
+Swagger is enabled in development mode and includes JWT support.
+It also shows example payloads for the main requests so the API is easier to try without guessing field values.
 
 ## Final Notes
 
 - `CurrentPosition` is kept as an integer because the exercise explicitly requires it.
 - The bonus is derived from the employee state, so it is calculated at runtime instead of being stored in the database.
 - The project keeps the implementation simple on purpose so it is easy to review and explain during the test.
+- Employee deletion is implemented as soft delete, so deleted employees are excluded from list and read queries.
