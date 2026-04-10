@@ -378,6 +378,21 @@ dotnet run --project .\API\API.csproj
 Swagger is enabled in development mode and includes JWT support.
 It also shows example payloads for the main requests so the API is easier to try without guessing field values.
 
+## Running Tests
+
+The solution includes xUnit tests for:
+
+- domain rules
+- employee creation and update use cases
+- project assignment
+- employee queries by department and project participation
+
+Run the test suite from the solution root:
+
+```powershell
+dotnet test .\StaffTrackerManager.sln
+```
+
 ## Final Notes
 
 - `CurrentPosition` is kept as an integer because the exercise explicitly requires it.
