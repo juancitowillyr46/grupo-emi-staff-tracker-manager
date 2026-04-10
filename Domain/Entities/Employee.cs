@@ -11,6 +11,8 @@ public class Employee
     public Position? CurrentPositionInfo { get; private set; }
     public decimal Salary { get; private set; }
     public int DepartmentId { get; private set; }
+    public bool IsDeleted { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
     public Department? Department { get; private set; }
     public IReadOnlyCollection<PositionHistory> PositionHistories => _positionHistories.AsReadOnly();
     public IReadOnlyCollection<EmployeeProject> EmployeeProjects => _employeeProjects.AsReadOnly();
@@ -51,6 +53,12 @@ public class Employee
     {
         CurrentPosition = position.Id;
         CurrentPositionInfo = position;
+    }
+
+    public void SoftDelete()
+    {
+        IsDeleted = true;
+        DeletedAt = DateTime.UtcNow;
     }
 
     public void AddProject(Project project)

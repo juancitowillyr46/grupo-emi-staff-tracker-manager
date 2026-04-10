@@ -26,6 +26,12 @@ public sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(x => x.DepartmentId)
             .IsRequired();
 
+        builder.Property(x => x.IsDeleted)
+            .IsRequired();
+
+        builder.Property(x => x.DeletedAt)
+            .IsRequired(false);
+
         builder.HasOne(x => x.Department)
             .WithMany(x => x.Employees)
             .HasForeignKey(x => x.DepartmentId)
@@ -45,5 +51,7 @@ public sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .WithOne(x => x.Employee)
             .HasForeignKey(x => x.EmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

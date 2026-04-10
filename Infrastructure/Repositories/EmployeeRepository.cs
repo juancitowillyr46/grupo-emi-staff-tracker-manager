@@ -99,6 +99,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
 
     public void Delete(Employee employee)
     {
-        _context.Employees.Remove(employee);
+        employee.SoftDelete();
+        _context.Employees.Update(employee);
     }
 }
