@@ -22,6 +22,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
+            .ThenInclude(x => x.Project)
             .ToListAsync();
     }
 
@@ -33,6 +34,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
+            .ThenInclude(x => x.Project)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -43,6 +45,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
+            .ThenInclude(x => x.Project)
             .ToListAsync();
     }
 
@@ -54,6 +57,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
             .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
+            .ThenInclude(x => x.Project)
             .ToListAsync();
     }
 

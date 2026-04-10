@@ -34,18 +34,7 @@ public sealed class CreateEmployeeUseCase : ICreateEmployeeUseCase
         await _employeeRepository.AddAsync(employee);
         await _unitOfWork.SaveChangesAsync();
 
-        return new EmployeeResponse(
-            employee.Id,
-            employee.Name,
-            employee.CurrentPosition,
-            employee.Salary,
-            employee.DepartmentId,
-            employee.CalculateAnnualBonus(),
-            employee.PositionHistories.Select(history => new PositionHistoryResponse(
-                history.EmployeeId,
-                history.Position,
-                history.StartDate,
-                history.EndDate)).ToList(),
-            employee.EmployeeProjects.Select(employeeProject => employeeProject.ProjectId).ToList());
+        var createdEmployee = await _employeeRepository.GetByIdAsync(employee.Id);
+        return createdEmployee is null ? EmployeeResponseMapper.Map(employee) : EmployeeResponseMapper.Map(createdEmployee);
     }
 }
