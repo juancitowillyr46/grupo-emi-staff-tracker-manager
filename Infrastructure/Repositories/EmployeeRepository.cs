@@ -18,6 +18,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     {
         return await _context.Employees
             .Include(x => x.Department)
+            .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
             .ToListAsync();
@@ -27,6 +28,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     {
         return await _context.Employees
             .Include(x => x.Department)
+            .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -36,6 +38,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     {
         return await _context.Employees
             .Where(x => x.DepartmentId == departmentId)
+            .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
             .ToListAsync();
@@ -46,6 +49,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
         return await _context.Employees
             .Where(x => x.DepartmentId == departmentId && x.EmployeeProjects.Any())
             .Include(x => x.Department)
+            .Include(x => x.CurrentPositionInfo)
             .Include(x => x.PositionHistories)
             .Include(x => x.EmployeeProjects)
             .ToListAsync();
@@ -54,6 +58,11 @@ public sealed class EmployeeRepository : IEmployeeRepository
     public async Task<Project?> GetProjectByIdAsync(int projectId)
     {
         return await _context.Projects.FirstOrDefaultAsync(x => x.Id == projectId);
+    }
+
+    public async Task<Position?> GetPositionByIdAsync(int positionId)
+    {
+        return await _context.Positions.FirstOrDefaultAsync(x => x.Id == positionId);
     }
 
     public async Task<IReadOnlyCollection<Project>> GetProjectsByIdsAsync(IEnumerable<int> projectIds)

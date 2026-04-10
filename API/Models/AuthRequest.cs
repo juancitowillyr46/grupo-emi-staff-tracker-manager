@@ -1,3 +1,6 @@
 namespace API.Controllers;
 
-public sealed record AuthRequest(string Username, string Password, string Role);
+/// <summary>
+/// Request body used for user login.
+/// </summary>
+public sealed record LoginRequest(string Username, string Password);

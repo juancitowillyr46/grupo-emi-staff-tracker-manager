@@ -22,7 +22,14 @@ public sealed class UpdateEmployeeUseCase : IUpdateEmployeeUseCase
             return null;
         }
 
+        var position = await _employeeRepository.GetPositionByIdAsync(request.CurrentPosition);
+        if (position is null)
+        {
+            throw new ArgumentException("Current position is invalid.", nameof(request.CurrentPosition));
+        }
+
         employee.UpdateDetails(request.Name, request.CurrentPosition, request.Salary, request.DepartmentId);
+        employee.SetCurrentPosition(position);
 
         await _unitOfWork.SaveChangesAsync();
 

@@ -31,6 +31,11 @@ public sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .HasForeignKey(x => x.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(x => x.CurrentPositionInfo)
+            .WithMany(x => x.Employees)
+            .HasForeignKey(x => x.CurrentPosition)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasMany(x => x.PositionHistories)
             .WithOne(x => x.Employee)
             .HasForeignKey(x => x.EmployeeId)

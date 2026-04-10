@@ -35,6 +35,9 @@ public class EmployeesController : ControllerBase
         _deleteEmployeeUseCase = deleteEmployeeUseCase;
     }
 
+    /// <summary>
+    /// Gets all employees.
+    /// </summary>
     [HttpGet]
     [Authorize(Roles = "Admin,User")]
     public async Task<ActionResult<IReadOnlyCollection<EmployeeResponse>>> GetAll()
@@ -43,6 +46,9 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
+    /// <summary>
+    /// Gets an employee by id.
+    /// </summary>
     [HttpGet("{id:int}")]
     [Authorize(Roles = "Admin,User")]
     public async Task<ActionResult<EmployeeResponse>> GetById(int id)
@@ -51,6 +57,9 @@ public class EmployeesController : ControllerBase
         return employee is null ? NotFound() : Ok(employee);
     }
 
+    /// <summary>
+    /// Gets employees for a department that have at least one project assigned.
+    /// </summary>
     [HttpGet("department/{departmentId:int}/with-projects")]
     [Authorize(Roles = "Admin,User")]
     public async Task<ActionResult<IReadOnlyCollection<EmployeeResponse>>> GetByDepartmentWithProjects(int departmentId)
@@ -59,6 +68,9 @@ public class EmployeesController : ControllerBase
         return Ok(employees);
     }
 
+    /// <summary>
+    /// Assigns one or more projects to an employee.
+    /// </summary>
     [HttpPost("{employeeId:int}/projects")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AssignProjects(int employeeId, [FromBody] AssignProjectRequest request)
@@ -76,22 +88,45 @@ public class EmployeesController : ControllerBase
         };
     }
 
+    /// <summary>
+    /// Creates a new employee.
+    /// </summary>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<EmployeeResponse>> Create([FromBody] CreateEmployeeRequest request)
     {
-        var created = await _createEmployeeUseCase.ExecuteAsync(request);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        try
+        {
+            var created = await _createEmployeeUseCase.ExecuteAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
+    /// <summary>
+    /// Updates an employee.
+    /// </summary>
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult<EmployeeResponse>> Update(int id, [FromBody] UpdateEmployeeRequest request)
     {
-        var updated = await _updateEmployeeUseCase.ExecuteAsync(id, request);
-        return updated is null ? NotFound() : Ok(updated);
+        try
+        {
+            var updated = await _updateEmployeeUseCase.ExecuteAsync(id, request);
+            return updated is null ? NotFound() : Ok(updated);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
+    /// <summary>
+    /// Deletes an employee.
+    /// </summary>
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)

@@ -9,6 +9,7 @@ public interface IEmployeeRepository
     Task<IEnumerable<Employee>> GetByDepartmentAsync(int departmentId);
     Task<IEnumerable<Employee>> GetByDepartmentWithProjectsAsync(int departmentId);
     Task<Project?> GetProjectByIdAsync(int projectId);
+    Task<Position?> GetPositionByIdAsync(int positionId);
     Task<IReadOnlyCollection<Project>> GetProjectsByIdsAsync(IEnumerable<int> projectIds);
     Task<IReadOnlyCollection<int>> GetAssignedProjectIdsAsync(int employeeId);
     Task AddAsync(Employee employee);

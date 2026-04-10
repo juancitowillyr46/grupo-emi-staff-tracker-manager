@@ -8,6 +8,7 @@ public class Employee
     public int Id { get; }
     public string Name { get; private set; }
     public int CurrentPosition { get; private set; }
+    public Position? CurrentPositionInfo { get; private set; }
     public decimal Salary { get; private set; }
     public int DepartmentId { get; private set; }
     public Department? Department { get; private set; }
@@ -25,7 +26,7 @@ public class Employee
 
     public decimal CalculateAnnualBonus()
     {
-        return CurrentPosition == 1 ? Salary * 0.10m : Salary * 0.20m;
+        return CurrentPositionInfo?.IsManager == true ? Salary * 0.20m : Salary * 0.10m;
     }
 
     public void AddPositionHistory(PositionHistory history)
@@ -44,6 +45,12 @@ public class Employee
         CurrentPosition = currentPosition;
         Salary = salary;
         DepartmentId = departmentId;
+    }
+
+    public void SetCurrentPosition(Position position)
+    {
+        CurrentPosition = position.Id;
+        CurrentPositionInfo = position;
     }
 
     public void AddProject(Project project)

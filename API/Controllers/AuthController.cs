@@ -17,8 +17,11 @@ public class AuthController : ControllerBase
         _jwtTokenService = jwtTokenService;
     }
 
+    /// <summary>
+    /// Registers a new user and returns a JWT token.
+    /// </summary>
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponse>> Register([FromBody] AuthRequest request)
+    public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
     {
         if (!await _userStore.RegisterAsync(request.Username, request.Password, request.Role))
         {
@@ -29,8 +32,11 @@ public class AuthController : ControllerBase
         return Ok(new AuthResponse(request.Username, request.Role, token));
     }
 
+    /// <summary>
+    /// Validates the user credentials and returns a JWT token.
+    /// </summary>
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Login([FromBody] AuthRequest request)
+    public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
     {
         var user = await _userStore.ValidateAsync(request.Username, request.Password);
         if (user is null)

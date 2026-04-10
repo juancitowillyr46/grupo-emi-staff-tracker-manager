@@ -17,12 +17,20 @@ public sealed class CreateEmployeeUseCase : ICreateEmployeeUseCase
 
     public async Task<EmployeeResponse> ExecuteAsync(CreateEmployeeRequest request)
     {
+        var position = await _employeeRepository.GetPositionByIdAsync(request.CurrentPosition);
+        if (position is null)
+        {
+            throw new ArgumentException("Current position is invalid.", nameof(request.CurrentPosition));
+        }
+
         var employee = new Employee(
             request.Id,
             request.Name,
             request.CurrentPosition,
             request.Salary,
             request.DepartmentId);
+
+        employee.SetCurrentPosition(position);
 
         await _employeeRepository.AddAsync(employee);
         await _unitOfWork.SaveChangesAsync();
