@@ -20,5 +20,10 @@ public sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .WithOne(x => x.Project)
             .HasForeignKey(x => x.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasData(
+            new { Id = 1, Name = "Website" },
+            new { Id = 2, Name = "Mobile App" },
+            new { Id = 3, Name = "ERP" });
     }
 }

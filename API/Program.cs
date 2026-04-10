@@ -17,6 +17,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IGetAllEmployeesUseCase, GetAllEmployeesUseCase>();
 builder.Services.AddScoped<IGetEmployeeByIdUseCase, GetEmployeeByIdUseCase>();
+builder.Services.AddScoped<IGetEmployeesByDepartmentWithProjectsUseCase, GetEmployeesByDepartmentWithProjectsUseCase>();
+builder.Services.AddScoped<IAssignProjectToEmployeeUseCase, AssignProjectToEmployeeUseCase>();
 builder.Services.AddScoped<ICreateEmployeeUseCase, CreateEmployeeUseCase>();
 builder.Services.AddScoped<IUpdateEmployeeUseCase, UpdateEmployeeUseCase>();
 builder.Services.AddScoped<IDeleteEmployeeUseCase, DeleteEmployeeUseCase>();

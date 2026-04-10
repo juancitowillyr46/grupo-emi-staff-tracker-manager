@@ -11,6 +11,8 @@ public class EmployeesController : ControllerBase
 {
     private readonly IGetAllEmployeesUseCase _getAllEmployeesUseCase;
     private readonly IGetEmployeeByIdUseCase _getEmployeeByIdUseCase;
+    private readonly IGetEmployeesByDepartmentWithProjectsUseCase _getEmployeesByDepartmentWithProjectsUseCase;
+    private readonly IAssignProjectToEmployeeUseCase _assignProjectToEmployeeUseCase;
     private readonly ICreateEmployeeUseCase _createEmployeeUseCase;
     private readonly IUpdateEmployeeUseCase _updateEmployeeUseCase;
     private readonly IDeleteEmployeeUseCase _deleteEmployeeUseCase;
@@ -18,12 +20,16 @@ public class EmployeesController : ControllerBase
     public EmployeesController(
         IGetAllEmployeesUseCase getAllEmployeesUseCase,
         IGetEmployeeByIdUseCase getEmployeeByIdUseCase,
+        IGetEmployeesByDepartmentWithProjectsUseCase getEmployeesByDepartmentWithProjectsUseCase,
+        IAssignProjectToEmployeeUseCase assignProjectToEmployeeUseCase,
         ICreateEmployeeUseCase createEmployeeUseCase,
         IUpdateEmployeeUseCase updateEmployeeUseCase,
         IDeleteEmployeeUseCase deleteEmployeeUseCase)
     {
         _getAllEmployeesUseCase = getAllEmployeesUseCase;
         _getEmployeeByIdUseCase = getEmployeeByIdUseCase;
+        _getEmployeesByDepartmentWithProjectsUseCase = getEmployeesByDepartmentWithProjectsUseCase;
+        _assignProjectToEmployeeUseCase = assignProjectToEmployeeUseCase;
         _createEmployeeUseCase = createEmployeeUseCase;
         _updateEmployeeUseCase = updateEmployeeUseCase;
         _deleteEmployeeUseCase = deleteEmployeeUseCase;
@@ -43,6 +49,31 @@ public class EmployeesController : ControllerBase
     {
         var employee = await _getEmployeeByIdUseCase.ExecuteAsync(id);
         return employee is null ? NotFound() : Ok(employee);
+    }
+
+    [HttpGet("department/{departmentId:int}/with-projects")]
+    [Authorize(Roles = "Admin,User")]
+    public async Task<ActionResult<IReadOnlyCollection<EmployeeResponse>>> GetByDepartmentWithProjects(int departmentId)
+    {
+        var employees = await _getEmployeesByDepartmentWithProjectsUseCase.ExecuteAsync(departmentId);
+        return Ok(employees);
+    }
+
+    [HttpPost("{employeeId:int}/projects")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> AssignProjects(int employeeId, [FromBody] AssignProjectRequest request)
+    {
+        var result = await _assignProjectToEmployeeUseCase.ExecuteAsync(employeeId, request.ProjectIds);
+
+        return result.ErrorType switch
+        {
+            AssignProjectsErrorType.None => NoContent(),
+            AssignProjectsErrorType.EmployeeNotFound => NotFound(result.ErrorMessage),
+            AssignProjectsErrorType.ProjectsNotFound => NotFound(result.ErrorMessage),
+            AssignProjectsErrorType.DuplicateProjects => BadRequest(result.ErrorMessage),
+            AssignProjectsErrorType.InvalidRequest => BadRequest(result.ErrorMessage),
+            _ => BadRequest(result.ErrorMessage)
+        };
     }
 
     [HttpPost]

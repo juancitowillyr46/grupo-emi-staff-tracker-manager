@@ -15,5 +15,10 @@ public sealed class DepartmentConfiguration : IEntityTypeConfiguration<Departmen
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(150);
+
+        builder.HasData(
+            new { Id = 1, Name = "IT" },
+            new { Id = 2, Name = "HR" },
+            new { Id = 3, Name = "Finance" });
     }
 }
