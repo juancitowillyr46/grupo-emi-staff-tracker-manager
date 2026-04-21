@@ -410,6 +410,12 @@ Run the test suite from the solution root:
 dotnet test .\StaffTrackerManager.sln
 ```
 
+To run only the xUnit test project:
+
+```powershell
+dotnet test .\Tests\StaffTrackerManager.Tests.csproj
+```
+
 ## Final Notes
 
 - `CurrentPosition` is kept as an integer because the exercise explicitly requires it.
