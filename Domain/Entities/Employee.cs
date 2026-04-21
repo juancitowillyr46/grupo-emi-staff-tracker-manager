@@ -40,18 +40,43 @@ public class Employee
         DepartmentId = departmentId;
     }
 
-    public void UpdateDetails(string name, int currentPosition, decimal salary, int departmentId)
+    public void UpdateDetails(string name, decimal salary, int departmentId)
     {
         Name = name;
-        CurrentPosition = currentPosition;
         Salary = salary;
         DepartmentId = departmentId;
     }
 
     public void SetCurrentPosition(Position position)
     {
+        InitializeCurrentPosition(position, DateTime.UtcNow);
+    }
+
+    public void InitializeCurrentPosition(Position position, DateTime startedAt)
+    {
+        ArgumentNullException.ThrowIfNull(position);
+
         CurrentPosition = position.Id;
         CurrentPositionInfo = position;
+        AddPositionHistory(new PositionHistory(Id, position.Name, startedAt));
+    }
+
+    public void ChangeCurrentPosition(Position position, DateTime changedAt)
+    {
+        ArgumentNullException.ThrowIfNull(position);
+
+        if (CurrentPosition == position.Id)
+        {
+            CurrentPositionInfo = position;
+            return;
+        }
+
+        var currentHistory = _positionHistories.LastOrDefault(x => x.EndDate is null);
+        currentHistory?.EndPosition(changedAt);
+
+        CurrentPosition = position.Id;
+        CurrentPositionInfo = position;
+        AddPositionHistory(new PositionHistory(Id, position.Name, changedAt));
     }
 
     public void SoftDelete()

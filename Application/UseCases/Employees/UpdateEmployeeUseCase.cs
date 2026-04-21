@@ -28,8 +28,8 @@ public sealed class UpdateEmployeeUseCase : IUpdateEmployeeUseCase
             throw new ArgumentException("Current position is invalid.", nameof(request.CurrentPosition));
         }
 
-        employee.UpdateDetails(request.Name, request.CurrentPosition, request.Salary, request.DepartmentId);
-        employee.SetCurrentPosition(position);
+        employee.UpdateDetails(request.Name, request.Salary, request.DepartmentId);
+        employee.ChangeCurrentPosition(position, DateTime.UtcNow);
 
         await _unitOfWork.SaveChangesAsync();
 

@@ -29,7 +29,7 @@ public sealed class CreateEmployeeUseCase : ICreateEmployeeUseCase
             request.Salary,
             request.DepartmentId);
 
-        employee.SetCurrentPosition(position);
+        employee.InitializeCurrentPosition(position, DateTime.UtcNow);
 
         await _employeeRepository.AddAsync(employee);
         await _unitOfWork.SaveChangesAsync();

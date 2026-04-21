@@ -27,6 +27,9 @@ public class EmployeeUseCasesTests
         Assert.Equal("Team Lead", response.CurrentPositionName);
         Assert.Equal("IT", response.DepartmentName);
         Assert.Equal(20m, response.AnnualBonus);
+        Assert.Single(response.PositionHistories);
+        Assert.Equal("Team Lead", response.PositionHistories.Single().Position);
+        Assert.Null(response.PositionHistories.Single().EndDate);
         Assert.Empty(response.Projects);
     }
 
@@ -107,5 +110,37 @@ public class EmployeeUseCasesTests
         Assert.Equal("IT", employee.DepartmentName);
         Assert.Single(employee.Projects);
         Assert.Equal("Website", employee.Projects.Single().Name);
+    }
+
+    [Fact]
+    public async Task UpdateEmployeeUseCase_ShouldTrackPositionHistoryWhenPositionChanges()
+    {
+        using var context = TestDbContextFactory.CreateContext();
+        var teamLead = context.Positions.Single(x => x.Id == 2);
+
+        var employee = new Employee("John Doe", 2, 100m, 1);
+        employee.InitializeCurrentPosition(teamLead, new DateTime(2026, 1, 1));
+        context.Employees.Add(employee);
+        await context.SaveChangesAsync();
+
+        var repository = new EmployeeRepository(context);
+        var unitOfWork = new UnitOfWork(context);
+        var useCase = new UpdateEmployeeUseCase(repository, unitOfWork);
+
+        var request = new UpdateEmployeeRequest("John Doe Updated", 3, 120m, 1);
+        var response = await useCase.ExecuteAsync(employee.Id, request);
+
+        Assert.NotNull(response);
+        Assert.Equal("John Doe Updated", response!.Name);
+        Assert.Equal("Engineering Manager", response.CurrentPositionName);
+        Assert.Equal(2, response.PositionHistories.Count);
+
+        var firstHistory = response.PositionHistories.OrderBy(x => x.StartDate).First();
+        var secondHistory = response.PositionHistories.OrderBy(x => x.StartDate).Last();
+
+        Assert.Equal("Team Lead", firstHistory.Position);
+        Assert.NotNull(firstHistory.EndDate);
+        Assert.Equal("Engineering Manager", secondHistory.Position);
+        Assert.Null(secondHistory.EndDate);
     }
 }
