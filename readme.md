@@ -32,6 +32,7 @@ The implementation was organized around small user stories based on the test req
 
 - As a user, I want to see a list of employees so I can review the current workforce.
 - As a user, I want to get a single employee by id so I can inspect their details.
+- As a user, I want to list departments, positions, and projects so I can use valid reference data when creating or updating employees.
 - As an admin, I want to create employees so I can manage the employee directory.
 - As an admin, I want to update employees so I can keep their data current.
 - As an admin, I want to delete employees so I can remove records when needed.
@@ -111,6 +112,7 @@ The Domain layer contains the core employee management model:
 - `CurrentPosition` is stored as an integer in `Employee`, as required by the test statement.
 - `CurrentPosition` points to the `Positions` catalog, which makes the bonus calculation easier to maintain.
 - Manager roles are grouped through `PositionType`, so several manager titles can share the same bonus rule.
+- `PositionHistory` is linked to `Employee` and records each position change with start and end dates.
 - `PositionHistory.Position` is stored as a string to keep the historical record descriptive.
 - The code follows Clean Architecture with Domain, Application, Infrastructure, and API layers.
 
@@ -152,6 +154,17 @@ Additional employee endpoints:
 
 - `POST /api/employees/{employeeId}/projects`
   - Assigns one or more projects to an employee.
+
+Reference data endpoints:
+
+- `GET /api/departments`
+  - Returns the list of departments.
+
+- `GET /api/positions`
+  - Returns the list of positions.
+
+- `GET /api/projects`
+  - Returns the list of projects.
 
 ### 2.2 Authentication and authorization
 
@@ -204,6 +217,7 @@ The SQL schema includes:
 
 - `Employees`
 - `Departments`
+- `Positions`
 - `Projects`
 - `PositionHistory`
 - `EmployeeProjects`
@@ -212,6 +226,7 @@ The SQL schema includes:
 The relationships are:
 
 - `Departments 1 --- N Employees`
+- `Positions 1 --- N Employees`
 - `Employees 1 --- N PositionHistory`
 - `Employees N --- N Projects` through `EmployeeProjects`
 
@@ -224,18 +239,20 @@ The Infrastructure layer contains:
   - Applies all EF Core configurations from the assembly.
 
 - Entity configurations
-  - `EmployeeConfiguration`
-  - `DepartmentConfiguration`
-  - `ProjectConfiguration`
-  - `PositionHistoryConfiguration`
-  - `EmployeeProjectConfiguration`
-  - `UserConfiguration`
+- `EmployeeConfiguration`
+- `DepartmentConfiguration`
+- `PositionConfiguration`
+- `ProjectConfiguration`
+- `PositionHistoryConfiguration`
+- `EmployeeProjectConfiguration`
+- `UserConfiguration`
 
 - Repositories
   - `EmployeeRepository`
   - `DepartmentRepository`
-  - `ProjectRepository`
-  - `UserStore`
+- `ProjectRepository`
+- `PositionRepository`
+- `UserStore`
 
 - `UnitOfWork`
   - Wraps `SaveChangesAsync()` for coordinated persistence.
@@ -399,3 +416,4 @@ dotnet test .\StaffTrackerManager.sln
 - The bonus is derived from the employee state, so it is calculated at runtime instead of being stored in the database.
 - The project keeps the implementation simple on purpose so it is easy to review and explain during the test.
 - Employee deletion is implemented as soft delete, so deleted employees are excluded from list and read queries.
+- The `PositionHistory` flow records position changes so the employee history remains aligned with the domain requirement.
